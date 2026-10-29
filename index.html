@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #fff;
+      color: #333;
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+    }
+
+    .container {
+      width: 300px;
+      max-width: calc(100% - 40px);
+      margin: 74px auto 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: bold;
+    }
+
+    input {
+      display: block;
+      width: 100%;
+      height: 42px;
+      padding: 0 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #fff;
+      color: #333;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #bbb;
+    }
+
+    .output-label {
+      margin-top: 34px;
+    }
+
+    .output {
+      width: 100%;
+      min-height: 42px;
+      padding: 11px 15px;
+      border: 1px dashed #c7c7c7;
+      overflow-wrap: anywhere;
+      font-size: 14px;
+      line-height: 18px;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <label for="original">
+      Вставьте оригинальную ссылку сюда:
+    </label>
+
+    <input
+      id="original"
+      type="text"
+      placeholder="t.me/username"
+      autocomplete="off"
+    >
+
+    <label class="output-label" for="result">
+      Здесь появится преобразованная ссылка:
+    </label>
+
+    <div class="output" id="result"></div>
+  </main>
+
+  <script>
+    const original = document.getElementById("original");
+    const result = document.getElementById("result");
+
+    original.addEventListener("input", function () {
+      let value = original.value.trim();
+
+      // Убираем адрес Telegram, если он указан.
+      value = value.replace(
+        /^(?:https?:\/\/)?(?:www\.)?t\.me\//i,
+        ""
+      );
+
+      // Убираем @ перед именем, чтобы добавить его заново.
+      value = value.replace(/^@/, "");
+
+      result.textContent = value ? "@" + value : "";
+    });
+  </script>
+</body>
+</html>
+
