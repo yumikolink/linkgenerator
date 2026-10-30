@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title></title>
+  <title>Преобразование ссылок</title>
 
   <style>
     * {
@@ -13,21 +12,27 @@
 
     body {
       margin: 0;
+      min-height: 100vh;
+      min-height: 100svh;
       background: #fff;
       color: #333;
       font-family: Arial, sans-serif;
       font-size: 13px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 15px 0;
     }
 
     .container {
       width: 300px;
       max-width: calc(100% - 40px);
-      margin: 0px auto 0;
+      margin: 0 auto;
     }
 
     label {
       display: block;
-      margin-bottom: 7px;
+      margin-bottom: 6px;
       font-weight: bold;
     }
 
@@ -36,21 +41,22 @@
       width: 100%;
       height: 42px;
       padding: 0 15px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+      border: 1px solid #d5d5d5;
+      border-radius: 7px;
       background: #fff;
       color: #333;
       font-family: Arial, sans-serif;
       font-size: 14px;
       outline: none;
+      transition: border-color 0.2s;
     }
 
     input:focus {
-      border-color: #bbb;
+      border-color: #999;
     }
 
     .output-label {
-      margin-top: 34px;
+      margin-top: 20px;
     }
 
     .output {
@@ -58,15 +64,65 @@
       min-height: 42px;
       padding: 11px 15px;
       border: 1px dashed #c7c7c7;
+      border-radius: 7px;
       overflow-wrap: anywhere;
       font-size: 14px;
       line-height: 18px;
+      background: #fafafa;
+    }
+
+    .copy-button {
+      display: block;
+      width: 100%;
+      height: 42px;
+      margin-top: 12px;
+      border: 1px solid #d0d0d0;
+      border-radius: 7px;
+      background: linear-gradient(
+        135deg,
+        #ffffff 0%,
+        #eeeeee 50%,
+        #dcdcdc 100%
+      );
+      color: #333;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
+    }
+
+    .copy-button:hover {
+      background: linear-gradient(
+        135deg,
+        #f5f5f5 0%,
+        #e5e5e5 100%
+      );
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .copy-button:active {
+      transform: scale(0.98);
+    }
+
+    .copy-button:disabled {
+      opacity: 0.5;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    @media (max-height: 300px) {
+      body {
+        align-items: flex-start;
+      }
     }
   </style>
 </head>
 
 <body>
+
   <main class="container">
+
     <label for="original">
       Вставьте оригинальную ссылку сюда:
     </label>
@@ -78,32 +134,71 @@
       autocomplete="off"
     >
 
-    <label class="output-label" for="result">
+    <label class="output-label">
       Здесь появится преобразованная ссылка:
     </label>
 
     <div class="output" id="result"></div>
+
+    <button class="copy-button" id="copyButton" disabled>
+      Скопировать ссылку
+    </button>
+
   </main>
 
   <script>
     const original = document.getElementById("original");
     const result = document.getElementById("result");
+    const copyButton = document.getElementById("copyButton");
 
     original.addEventListener("input", function () {
       let value = original.value.trim();
 
-      // Убираем адрес Telegram, если он указан.
+      // Убираем адрес Telegram.
       value = value.replace(
         /^(?:https?:\/\/)?(?:www\.)?t\.me\//i,
         ""
       );
 
-      // Убираем @ перед именем, чтобы добавить его заново.
+      // Убираем @ перед именем.
       value = value.replace(/^@/, "");
 
       result.textContent = value ? "@" + value : "";
+
+      copyButton.disabled = !value;
+      copyButton.textContent = "Скопировать ссылку";
+    });
+
+    copyButton.addEventListener("click", async function () {
+      const text = result.textContent;
+
+      if (!text) return;
+
+      try {
+        await navigator.clipboard.writeText(text);
+        copyButton.textContent = "Скопировано!";
+      } catch (error) {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        try {
+          document.execCommand("copy");
+          copyButton.textContent = "Скопировано!";
+        } catch (e) {
+          copyButton.textContent = "Не удалось скопировать";
+        }
+
+        textarea.remove();
+      }
+
+      setTimeout(function () {
+        copyButton.textContent = "Скопировать ссылку";
+      }, 2000);
     });
   </script>
+
 </body>
 </html>
 
