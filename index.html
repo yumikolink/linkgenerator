@@ -81,9 +81,10 @@
 
       background: linear-gradient(
         135deg,
-        #cecece 0%,
-        #bcbcbc 45%,
-        #adadad 100%
+        #d4d4d4 0%,
+        #bcbcbc 35%,
+        #999999 70%,
+        #858585 100%
       );
 
       color: #303030;
@@ -111,9 +112,9 @@
     .copy-button:hover:not(:disabled) {
       background: linear-gradient(
         135deg,
-        #d5d5d5 0%,
-        #c5c5c5 50%,
-        #b8b8b8 100%
+        #d0d0d0 0%,
+        #b5b5b5 40%,
+        #969696 100%
       );
     }
 
@@ -171,11 +172,13 @@
     original.addEventListener("input", function () {
       let value = original.value.trim();
 
+      // Убираем адрес Telegram.
       value = value.replace(
         /^(?:https?:\/\/)?(?:www\.)?t\.me\//i,
         ""
       );
 
+      // Убираем @ перед именем.
       value = value.replace(/^@/, "");
 
       result.textContent = value ? "@" + value : "";
